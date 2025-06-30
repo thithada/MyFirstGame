@@ -1,5 +1,4 @@
 extends Area2D
-
 var speed = 120 #ความเร็วเคลื่อนที่
 var display_size #ขนาดหน้าจอ
 signal take_damage #รับความเสียหาย
@@ -34,17 +33,15 @@ func _process(delta) :
 	#ตั้งค่าขอบเขตการเคลื่อนที่
 	position = position.clamp(Vector2.ZERO, display_size)
 	
-	#Flip animation
-	if velocity.x != 0 :
+	#Flip animation - ใช้อนิเมชั่น Walk เสมอ และหันแค่ซ้าย-ขวา
+	if velocity.length() > 0:
 		$AnimatedSprite2D.animation = "Walk"
-		$AnimatedSprite2D.flip_h = velocity.x < 0
-		$AnimatedSprite2D.flip_v = false #ไม่สามารถพลิกตัวในแนวตั้้งได้
+		$AnimatedSprite2D.flip_v = false
 		
-	if velocity.y != 0 :
-		$AnimatedSprite2D.animation = "UP"
-		$AnimatedSprite2D.flip_v = velocity.y > 0
-		$AnimatedSprite2D.flip_h = false
-
+		# หันซ้าย-ขวาเฉพาะเมื่อมีการเคลื่อนที่แนวนอน
+		if velocity.x != 0:
+			$AnimatedSprite2D.flip_h = velocity.x < 0
+		# ถ้าเคลื่อนที่แนวตั้งเท่านั้น ไม่เปลี่ยนทิศทางการหัน
 
 func _on_body_entered(body: Node2D) -> void:
 	print("ไอโง่โดนชน")
